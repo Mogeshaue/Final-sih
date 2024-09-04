@@ -7,8 +7,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import OverviewChart from "components/OverviewChart";
 import StatBox from "components/StatBox";
 import BlockedRequestsChart from "components/BlockedRequestsChart";
-import { Email, PointOfSale, Traffic } from "@mui/icons-material";
-import { DownloadOutlined } from "@mui/icons-material";
+import {  PointOfSale, Traffic } from "@mui/icons-material";
+import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon } from "@mui/icons-material";
 
 const generateRandomIP = () => {
   return Array(4)
@@ -113,7 +113,7 @@ const Dashboard = () => {
           title="Total Queries"
           value={data.length}
           icon={
-            <Email
+            <QueryStatsIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
@@ -122,7 +122,7 @@ const Dashboard = () => {
           title="Queries Blocked"
           value={data.filter((row) => row.requestStatus === "Blocked").length}
           icon={
-            <PointOfSale
+            <DoDisturbAltRoundedIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
@@ -143,7 +143,7 @@ const Dashboard = () => {
           title="Domains On Adlist"
           value="15"
           icon={
-            <Traffic
+            <StorageRoundedIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
