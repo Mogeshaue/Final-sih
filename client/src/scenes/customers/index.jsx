@@ -31,7 +31,7 @@ const Customers = () => {
   ];
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box m="1.9rem 2.9rem">
       <FlexBetween>
         <Header title="Requested IP Details" subtitle={`Details for IP: ${ipAddress}`} />
       </FlexBetween>
@@ -49,6 +49,7 @@ const Customers = () => {
             backgroundColor: theme.palette.background.alt,
             color: theme.palette.secondary[100],
             borderBottom: "none",
+            
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: theme.palette.background.alt,

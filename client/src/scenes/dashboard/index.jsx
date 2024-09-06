@@ -56,7 +56,12 @@ const Dashboard = () => {
       headerName: "User IP",
       flex: 1,
       renderCell: (params) => (
-        <Button onClick={() => handleRowClick(params)}>{params.value}</Button>
+        <Button
+          onClick={() => handleRowClick(params)}
+          style={{ fontSize: "18px", color: "white" }} // Increased font size
+        >
+          {params.value}
+        </Button>
       ),
     },
     {
@@ -80,16 +85,19 @@ const Dashboard = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
-        <Header title="CYBER DASHBOARD" subtitle="Welcome to your Cyber dashboard" />
+        <Header
+          title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>CYBER DASHBOARD</Typography>}
+          subtitle={<Typography sx={{ fontSize: "18px" }}>Welcome to your Cyber dashboard</Typography>}
+        />
 
         <Box>
           <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
               color: theme.palette.background.alt,
-              fontSize: "14px",
+              fontSize: "16px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: "12px 24px",
             }}
           >
             <DownloadOutlined sx={{ mr: "10px" }} />
@@ -103,34 +111,52 @@ const Dashboard = () => {
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="160px"
-        gap="20px"
+        gap="25px"
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
         }}
+        justifyContent="center"
+        gridRow="span 2"
       >
         {/* ROW 1 */}
-        <StatBox
-          title="Total Queries"
-          value={data.length}
-          icon={
-            <QueryStatsIcon
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-        <StatBox
-          title="Queries Blocked"
-          value={data.filter((row) => row.requestStatus === "Blocked").length}
-          icon={
-            <DoDisturbAltRoundedIcon
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
+        <Box gridColumn="span 3" display="flex" justifyContent="center">
+    <StatBox
+      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Total Queries</Typography>}
+      value={data.length}
+      icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
+    />
+  </Box>
+
+  <Box gridColumn="span 3" display="flex" justifyContent="center">
+    <StatBox
+      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Queries Blocked</Typography>}
+      value={data.filter((row) => row.requestStatus === "Blocked").length}
+      icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
+    />
+  </Box>
+  
+
+  <Box gridColumn="span 3" display="flex" justifyContent="center">
+    <StatBox
+      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Domains On Adlist</Typography>}
+      value="15"
+      icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
+    />
+  </Box>
+
+  <Box gridColumn="span 3" display="flex" justifyContent="center">
+    <StatBox
+      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Block %</Typography>}
+      value="71%"
+      icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
+    />
+  </Box>
+
+
 
         {/* Add BlockedRequestsChart here */}
         <Box
-          gridColumn="span 8"
+          gridColumn="span 15"
           gridRow="span 3"
           backgroundColor={theme.palette.background.alt}
           p="1rem"
@@ -139,16 +165,8 @@ const Dashboard = () => {
           <BlockedRequestsChart />
         </Box>
 
-        <StatBox
-          title="Domains On Adlist"
-          value="15"
-          icon={
-            <StorageRoundedIcon
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-
+        
+      
         {/* ROW 2 */}
         <Box
           gridColumn="span 8"
@@ -160,11 +178,13 @@ const Dashboard = () => {
             },
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
+              fontSize: "16px", // Increased font size for cell text
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: theme.palette.background.alt,
               color: theme.palette.secondary[100],
               borderBottom: "none",
+              fontSize: "16px", // Increased font size for header text
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: theme.palette.background.alt,
@@ -194,34 +214,33 @@ const Dashboard = () => {
           p="1.5rem"
           borderRadius="0.55rem"
         >
-          <Typography variant="h6" sx={{ color: theme.palette.secondary[100], mb: "1rem" }}>
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100], mb: "1rem", fontSize: "18px" }}>
             Server Status
           </Typography>
 
           <StatBox
-            title="Server On Time"
+            title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Server On Time</Typography>}
             value="123 Hours"
             icon={
               <PointOfSale
-                sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
+                sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} // Increased icon size
               />
             }
           />
 
           <Box mt="1.5rem">
             <StatBox
-              title="Server Off Time"
+              title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Server Off Time</Typography>}
               value="12 Hours"
               icon={
                 <Traffic
-                  sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
+                  sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} // Increased icon size
                 />
               }
             />
           </Box>
         </Box>
 
-        {/* Moved OverviewChart to the desired box */}
         <Box
           gridColumn="span 8"
           gridRow="span 3"
