@@ -10,7 +10,7 @@ export const tokensDark = {
     500: "#868e96", // Neutral grey for readable text
     600: "#495057", // Dark grey for text contrast
     700: "#343a40", // Darker grey for main text
-    800: "#212529", // Dark background
+    800: "#000000", // Dark background
     900: "#141619", // Dark background for sections
   },
   primary: {
@@ -23,7 +23,7 @@ export const tokensDark = {
     100: "#00829b",  // Darker blue for contrast
   },
   background: {
-    100: "#1A1A1A",  // Dark background
+    100: "#000000",  // Dark background
     200: "#292929",  // Dark grey background
     300: "#404040",  // Lighter grey background
   },

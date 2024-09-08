@@ -12,7 +12,6 @@ const BlockedRequestsChart = () => {
     const date = new Date(curr.time).toLocaleDateString(); // Use date in YYYY-MM-DD format
     if (!acc[date]) acc[date] = 0;
     if (curr.blocked) acc[date] += 1; // Count blocked requests
-
     return acc;
   }, {});
 
@@ -30,7 +29,7 @@ const BlockedRequestsChart = () => {
             data: chartDataFormatted,
           },
         ]}
-        margin={{ top: 20, right: 20, bottom: 50, left: 60 }} // Adjusted margin to reduce height
+        margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
         xScale={{ type: "point" }}
         yScale={{ type: "linear", stacked: false, min: "auto", max: "auto" }}
         axisTop={null}
@@ -40,11 +39,11 @@ const BlockedRequestsChart = () => {
           tickPadding: 5,
           legend: '',
           legendOffset: 0,
-          format: d => d, // Show date on x-axis
+          format: d => d,
           tickRotation: -45, // Rotate x-axis labels for better readability
           style: {
             fontSize: 12,
-            fill: '#4cc9f0', // Coolors color
+            color: 'white', // Coolors color for x-axis labels
           },
         }}
         axisLeft={{
@@ -53,22 +52,21 @@ const BlockedRequestsChart = () => {
           tickPadding: 5,
           legend: 'Number of Blocked Requests',
           legendPosition: 'middle',
-          legendOffset: -40, // Reduced height of y-axis
+          legendOffset: -40,
           style: {
-            fontSize: 12,
-            fill: '#f72585', // Coolors color
+            fontSize: 20,
+            fill: '#f72585', // Coolors color for y-axis labels
           },
         }}
-        colors={{ scheme: 'nivo' }} // Using Nivo color scheme
-        pointSize={8} // Reduced point size
-        pointColor={theme.palette.primary.main}
+        colors={[ '#4cc9f0']} // Custom Coolors color palette
+        pointSize={8}
+        pointColor="#000000"
         pointBorderWidth={2}
         pointBorderColor={theme.palette.background.paper}
         pointLabelYOffset={-10}
-        enableArea={true}
+        enableArea={false} 
         enableSlices="x"
-        areaOpacity={0.1}
-        lineWidth={2} // Reduced line width
+        lineWidth={2}
         useMesh={true}
         legends={[
           {
@@ -78,14 +76,14 @@ const BlockedRequestsChart = () => {
             translateY: -40,
             itemWidth: 80,
             itemHeight: 20,
-            itemTextColor: '#7209b7', // Coolors color
+            itemTextColor: '#7209b7', // Coolors color for legend
             symbolSize: 12,
             symbolShape: 'circle',
             effects: [
               {
                 on: 'hover',
                 style: {
-                  itemTextColor: '#4361ee', // Coolors color
+                  itemTextColor: '#000000', // Hover color for legend text
                 },
               },
             ],
@@ -108,7 +106,16 @@ const BlockedRequestsChart = () => {
           },
           grid: {
             line: {
-              stroke: '#3a0ca3', // Coolors color
+              stroke: '#FFFFFF', // Grid line color
+            },
+          },
+          tooltip: {
+            container: {
+              background: '#ffffff', // Background color for tooltip
+              color: '#000000', // Text color for tooltip
+              fontSize: '14px',
+              borderRadius: '4px',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.25)',
             },
           },
         }}

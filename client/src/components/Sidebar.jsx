@@ -44,7 +44,7 @@ const navItems = [
   },
  
   {
-    text: "RequestedIP",
+    text: "Requested IP",
     icon: <Groups2Outlined />,
   },
   {

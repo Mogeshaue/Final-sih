@@ -1,28 +1,32 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useGetSalesQuery } from "state/api";
+import { generateMockData } from "../utils/mockData"; // Assuming mock data for blocked requests
 
 const BreakdownChart = ({ isDashboard = false }) => {
-  const { data, isLoading } = useGetSalesQuery();
   const theme = useTheme();
+  const data = generateMockData(); // Replace with your actual blocked request data
 
-  if (!data || isLoading) return "Loading...";
+  if (!data || data.length === 0) return "Loading...";
 
-  const colors = [
-    theme.palette.secondary[500],
-    theme.palette.secondary[300],
-    theme.palette.secondary[300],
-    theme.palette.secondary[500],
+  // Group the data by status
+  const blockedCount = data.filter((request) => request.blocked).length;
+  const nonBlockedCount = data.length - blockedCount;
+
+  const chartData = [
+    {
+      id: "Blocked",
+      label: "Blocked",
+      value: blockedCount,
+      color: "#00829b",
+    },
+    {
+      id: "Allowed",
+      label: "Allowed",
+      value: nonBlockedCount,
+      color: "#6A00FF",
+    },
   ];
-  const formattedData = Object.entries(data.salesByCategory).map(
-    ([category, sales], i) => ({
-      id: category,
-      label: category,
-      value: sales,
-      color: colors[i],
-    })
-  );
 
   return (
     <Box
@@ -33,7 +37,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
       position="relative"
     >
       <ResponsivePie
-        data={formattedData}
+        data={chartData}
         theme={{
           axis: {
             domain: {
@@ -130,7 +134,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
         }}
       >
         <Typography variant="h6">
-          {!isDashboard && "Total:"} ${data.yearlySalesTotal}
+          Total Blocked: {blockedCount}
         </Typography>
       </Box>
     </Box>

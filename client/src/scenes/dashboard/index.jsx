@@ -7,8 +7,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import OverviewChart from "components/OverviewChart";
 import StatBox from "components/StatBox";
 import BlockedRequestsChart from "components/BlockedRequestsChart";
-import {  PointOfSale, Traffic } from "@mui/icons-material";
-import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon } from "@mui/icons-material";
+import { PointOfSale, Traffic } from "@mui/icons-material";
+import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon,PanTool } from "@mui/icons-material";
 
 const generateRandomIP = () => {
   return Array(4)
@@ -58,7 +58,7 @@ const Dashboard = () => {
       renderCell: (params) => (
         <Button
           onClick={() => handleRowClick(params)}
-          style={{ fontSize: "18px", color: "white" }} // Increased font size
+          style={{ fontSize: "14px", color: "white" }} // Reduced font size for alignment
         >
           {params.value}
         </Button>
@@ -86,7 +86,7 @@ const Dashboard = () => {
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header
-          title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>CYBER DASHBOARD</Typography>}
+          title={<Typography sx={{ fontSize: "34px", fontWeight: "bold" }}>CYBER DASHBOARD</Typography>}
           subtitle={<Typography sx={{ fontSize: "18px" }}>Welcome to your Cyber dashboard</Typography>}
         />
 
@@ -111,63 +111,77 @@ const Dashboard = () => {
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="160px"
-        gap="25px"
+        gap="16px"
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
         }}
         justifyContent="center"
-        gridRow="span 2"
       >
-        {/* ROW 1 */}
-        <Box gridColumn="span 3" display="flex" justifyContent="center">
-    <StatBox
-      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Total Queries</Typography>}
-      value={data.length}
-      icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
-    />
-  </Box>
+        {/* Aligning the stat boxes in a single row */}
+        <Box gridColumn="span 3" display="flex" justifyContent="center" >
+  <StatBox
+    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Total Queries</Typography>}
+    value={
+      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
+        {data.length}
+      </Typography>
+    }
+    icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "65px" }} />}
+  />
+</Box>
 
-  <Box gridColumn="span 3" display="flex" justifyContent="center">
-    <StatBox
-      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Queries Blocked</Typography>}
-      value={data.filter((row) => row.requestStatus === "Blocked").length}
-      icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
-    />
-  </Box>
-  
+<Box gridColumn="span 3" display="flex" justifyContent="center">
+  <StatBox
+    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold"}}>Queries Blocked</Typography>}
+    value={
+      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
+        {data.filter((row) => row.requestStatus === "Blocked").length}
+      </Typography>
+    }
+    icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+  />
+</Box>
 
-  <Box gridColumn="span 3" display="flex" justifyContent="center">
-    <StatBox
-      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Domains On Adlist</Typography>}
-      value="15"
-      icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
-    />
-  </Box>
+<Box gridColumn="span 3" display="flex" justifyContent="center">
+  <StatBox
+    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Domains On Add list</Typography>}
+    value={
+      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
+        15
+      </Typography>
+    }
+    icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+  />
+</Box>
 
-  <Box gridColumn="span 3" display="flex" justifyContent="center">
-    <StatBox
-      title={<Typography sx={{ fontSize: "18px", fontWeight: "bold" }}>Block %</Typography>}
-      value="71%"
-      icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} />}
-    />
-  </Box>
+<Box gridColumn="span 3" display="flex" justifyContent="center">
+  <StatBox
+    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Block %</Typography>}
+    value={
+      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
+        71%
+      </Typography>
+    }
+    icon={<PanTool sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+  />
+</Box>
 
-
-
-        {/* Add BlockedRequestsChart here */}
+        {/* BlockedRequestsChart with updated styling */}
         <Box
-          gridColumn="span 15"
+          gridColumn="span 12"
           gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
+          gridLineColor="white" 
+          backgroundColor="#292929"
           p="1rem"
           borderRadius="0.55rem"
         >
-          <BlockedRequestsChart />
+          <BlockedRequestsChart
+            gridLineColor="white" // Changed grid lines to white
+          
+          />
         </Box>
 
-        
-      
-        {/* ROW 2 */}
+        {/* Table and other components */}
         <Box
           gridColumn="span 8"
           gridRow="span 3"
@@ -178,16 +192,16 @@ const Dashboard = () => {
             },
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
-              fontSize: "16px", // Increased font size for cell text
+              fontSize: "16px",
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: theme.palette.background.alt,
               color: theme.palette.secondary[100],
               borderBottom: "none",
-              fontSize: "16px", // Increased font size for header text
+              fontSize: "16px",
             },
             "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: theme.palette.background.alt,
+              backgroundColor: "#000000",
             },
             "& .MuiDataGrid-footerContainer": {
               backgroundColor: theme.palette.background.alt,
