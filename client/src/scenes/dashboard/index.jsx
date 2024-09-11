@@ -55,16 +55,19 @@ useEffect(() => {
     try {
       // Fetch uptime and downtime
       const timeResponse = await fetch(time_url);
-      console.log(timeResponse)
-      const { uptime, downtime } = timeResponse.data;
-      setServerUptime(uptime);
-      setServerDowntime(downtime);
+      console.log(timeResponse);
+      const resolvedData= await timeResponse.json()
+     console.log(resolvedData.uptime);
+
+  
+      setServerUptime(Math.round(resolvedData.uptime/60));
+      setServerDowntime(Math.round(resolvedData.downtime/60));
 
       // Fetch server health
       const healthResponse = await fetch(Health_url);
-      console.log(healthResponse)
-      const { status } = healthResponse.data;
-      setServerHealth(status);
+      const healthStatus= await healthResponse.json();
+      console.log(healthStatus);
+      setServerHealth(healthStatus.status);
 
       // Fetch network speed
       const speedResponse = await fetch(speed_url);
