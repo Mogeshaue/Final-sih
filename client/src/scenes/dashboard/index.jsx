@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
@@ -8,7 +9,11 @@ import OverviewChart from "components/OverviewChart";
 import StatBox from "components/StatBox";
 import BlockedRequestsChart from "components/BlockedRequestsChart";
 import { PointOfSale, Traffic } from "@mui/icons-material";
-import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon,PanTool } from "@mui/icons-material";
+import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon, PanTool } from "@mui/icons-material";
+
+const Health_url="https://api.pradyun.me/health";
+const speed_url="https://api.pradyun.me/speed";
+const time_url="https://api.pradyun.me/time";
 
 const generateRandomIP = () => {
   return Array(4)
@@ -36,8 +41,46 @@ const Dashboard = () => {
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const navigate = useNavigate();
 
-  const data = generateRandomData(500);
-  const isLoading = false;
+  const [data] = useState(generateRandomData(500));
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverUptime, setServerUptime] = useState("N/A");
+  const [serverDowntime, setServerDowntime] = useState("N/A");
+  const [serverHealth, setServerHealth] = useState("N/A");
+  const [ setNetworkSpeed] = useState("N/A");
+
+ /* eslint-disable react-hooks/exhaustive-deps */
+useEffect(() => {
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      // Fetch uptime and downtime
+      const timeResponse = await fetch(time_url);
+      console.log(timeResponse)
+      const { uptime, downtime } = timeResponse.data;
+      setServerUptime(uptime);
+      setServerDowntime(downtime);
+
+      // Fetch server health
+      const healthResponse = await fetch(Health_url);
+      console.log(healthResponse)
+      const { status } = healthResponse.data;
+      setServerHealth(status);
+
+      // Fetch network speed
+      const speedResponse = await fetch(speed_url);
+      console.log(healthResponse)
+      const { speed } = speedResponse.data;
+      setNetworkSpeed(speed);
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setIsLoading(false);
+  };
+
+  fetchData();
+}, []); // Empty dependency array
+/* eslint-enable react-hooks/exhaustive-deps */
 
   const handleRowClick = (params) => {
     if (params.field === "userId") {
@@ -58,7 +101,7 @@ const Dashboard = () => {
       renderCell: (params) => (
         <Button
           onClick={() => handleRowClick(params)}
-          style={{ fontSize: "14px", color: "white" }} // Reduced font size for alignment
+          style={{ fontSize: "14px", color: "white" }}
         >
           {params.value}
         </Button>
@@ -118,66 +161,65 @@ const Dashboard = () => {
         justifyContent="center"
       >
         {/* Aligning the stat boxes in a single row */}
-        <Box gridColumn="span 3" display="flex" justifyContent="center" >
-  <StatBox
-    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Total Queries</Typography>}
-    value={
-      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
-        {data.length}
-      </Typography>
-    }
-    icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "65px" }} />}
-  />
-</Box>
+        <Box gridColumn="span 3" display="flex" justifyContent="center">
+          <StatBox
+            title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Total Queries</Typography>}
+            value={
+              <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+                {data.length}
+              </Typography>
+            }
+            icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "65px" }} />}
+          />
+        </Box>
 
-<Box gridColumn="span 3" display="flex" justifyContent="center">
-  <StatBox
-    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold"}}>Queries Blocked</Typography>}
-    value={
-      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
-        {data.filter((row) => row.requestStatus === "Blocked").length}
-      </Typography>
-    }
-    icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
-  />
-</Box>
+        <Box gridColumn="span 3" display="flex" justifyContent="center">
+          <StatBox
+            title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Queries Blocked</Typography>}
+            value={
+              <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+                {data.filter((row) => row.requestStatus === "Blocked").length}
+              </Typography>
+            }
+            icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+          />
+        </Box>
 
-<Box gridColumn="span 3" display="flex" justifyContent="center">
-  <StatBox
-    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Domains On Add list</Typography>}
-    value={
-      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
-        15
-      </Typography>
-    }
-    icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
-  />
-</Box>
+        <Box gridColumn="span 3" display="flex" justifyContent="center">
+          <StatBox
+            title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Domains On Add list</Typography>}
+            value={
+              <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+                15
+              </Typography>
+            }
+            icon={<StorageRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+          />
+        </Box>
 
-<Box gridColumn="span 3" display="flex" justifyContent="center">
-  <StatBox
-    title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Block %</Typography>}
-    value={
-      <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}> {/* Increased size */}
-        71%
-      </Typography>
-    }
-    icon={<PanTool sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
-  />
-</Box>
+        <Box gridColumn="span 3" display="flex" justifyContent="center">
+          <StatBox
+            title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Block %</Typography>}
+            value={
+              <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+                71%
+              </Typography>
+            }
+            icon={<PanTool sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
+          />
+        </Box>
 
         {/* BlockedRequestsChart with updated styling */}
         <Box
           gridColumn="span 12"
           gridRow="span 3"
-          gridLineColor="white" 
+          gridLineColor="white"
           backgroundColor="#292929"
           p="1rem"
           borderRadius="0.55rem"
         >
           <BlockedRequestsChart
-            gridLineColor="white" // Changed grid lines to white
-          
+            gridLineColor="white"
           />
         </Box>
 
@@ -234,10 +276,10 @@ const Dashboard = () => {
 
           <StatBox
             title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Server On Time</Typography>}
-            value="123 Hours"
+            value={`${serverUptime} Hours`}
             icon={
               <PointOfSale
-                sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} // Increased icon size
+                sx={{ color: theme.palette.secondary[300], fontSize: "32px" }}
               />
             }
           />
@@ -245,13 +287,27 @@ const Dashboard = () => {
           <Box mt="1.5rem">
             <StatBox
               title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Server Off Time</Typography>}
-              value="12 Hours"
+              value={`${serverDowntime} Hours`}
               icon={
                 <Traffic
-                  sx={{ color: theme.palette.secondary[300], fontSize: "32px" }} // Increased icon size
+                  sx={{ color: theme.palette.secondary[300], fontSize: "32px" }}
                 />
               }
             />
+            <Box mt="1.5rem">
+              <Typography variant="h6" sx={{ color: theme.palette.secondary[100], mb: "1rem", fontSize: "16px" }}>
+                Server Health
+              </Typography>
+              <StatBox
+                title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Health Status</Typography>}
+                value={serverHealth}
+                icon={
+                  <PointOfSale
+                    sx={{ color: theme.palette.secondary[300], fontSize: "32px" }}
+                  />
+                }
+              />
+            </Box>
           </Box>
         </Box>
 
