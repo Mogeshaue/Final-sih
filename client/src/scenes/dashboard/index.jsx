@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
