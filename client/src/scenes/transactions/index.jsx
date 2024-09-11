@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, IconButton, Typography, Collapse } from "@mui/material";
+import { Box, IconButton, Typography, Collapse, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material"; // For down arrow icon
 import axios from "axios";
 
@@ -9,8 +9,7 @@ const sampleData = [
     ipAddress: "::ffff:10.1.75.129",
     userAgent: "Fuzz Faster U Fool v2.1.0-dev",
     geoLocation: "Unknown",
-    httpHeaders:
-      '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
     urlPath: "/_config.php",
     queryParameters: "{}",
     connectionDuration: "2149ms",
@@ -25,13 +24,14 @@ const sampleData = [
     statusCode: 302,
     requestPayloadSize: 0,
   },
-  // Additional sample logs can be added here...
+  // Additional sample logs...
 ];
 
 const Transactions = () => {
-  // State for managing logs and expanded IPs
+  // State for managing logs, expanded IPs, and search input
   const [logs, setLogs] = useState([]);
-  const [expandedRows, setExpandedRows] = useState({}); // Tracks which rows are expanded
+  const [expandedRows, setExpandedRows] = useState(null); // Tracks which row is expanded
+  const [searchInput, setSearchInput] = useState(""); // For search functionality
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch logs from the API (with error handling and fallback to sample data)
@@ -50,14 +50,22 @@ const Transactions = () => {
 
     fetchLogs();
   }, []);
+  
 
-  // Toggle expanded state for a row
-  const handleToggle = (ipAddress) => {
-    setExpandedRows((prevExpandedRows) => ({
-      ...prevExpandedRows,
-      [ipAddress]: !prevExpandedRows[ipAddress],
-    }));
+  // Handle search input change
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
   };
+
+  // Toggle expanded state for a specific log entry (using IP address and timestamp)
+  const handleToggle = (logId) => {
+    setExpandedRows((prevExpanded) => (prevExpanded === logId ? null : logId));
+  };
+
+  // Filter logs based on search input
+  const filteredLogs = logs.filter((log) =>
+    log.ipAddress.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -68,55 +76,102 @@ const Transactions = () => {
         List of IPs and log details
       </Typography>
 
+      {/* Search Bar */}
+      <Box mb="1rem">
+        <TextField
+          label="Search by IP"
+          variant="outlined"
+          fullWidth
+          value={searchInput}
+          onChange={handleSearchInputChange}
+        />
+      </Box>
+
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
-        logs.map((log) => (
-          <Box
-            key={log.ipAddress}
-            mt="1rem"
-            p="1rem"
-            border="1px solid #ccc"
-            borderRadius="8px"
-          >
-            {/* IP Address with toggle button */}
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography variant="body1">
-                <strong>IP Address:</strong> {log.ipAddress}
-              </Typography>
-              <IconButton onClick={() => handleToggle(log.ipAddress)}>
-                {expandedRows[log.ipAddress] ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </Box>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>IP Address</TableCell>
+                <TableCell>Response Time (ms)</TableCell>
+                <TableCell>Timestamp</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredLogs.map((log) => {
+                const logId = `${log.responseTime}`; // Unique identifier
 
-            {/* Toggleable log details */}
-            <Collapse in={expandedRows[log.ipAddress]}>
-              <Box mt="1rem">
-                <Typography>
-                  <strong>Timestamp:</strong> {log.timestamp}
-                </Typography>
-                <Typography>
-                  <strong>User Agent:</strong> {log.userAgent}
-                </Typography>
-                <Typography>
-                  <strong>Geo Location:</strong> {log.geoLocation}
-                </Typography>
-                <Typography>
-                  <strong>Response Time:</strong> {log.responseTime} ms
-                </Typography>
-                <Typography>
-                  <strong>Request Method:</strong> {log.requestMethod}
-                </Typography>
-                <Typography>
-                  <strong>Status Code:</strong> {log.statusCode}
-                </Typography>
-                <Typography>
-                  <strong>URL Path:</strong> {log.urlPath}
-                </Typography>
-              </Box>
-            </Collapse>
-          </Box>
-        ))
+                return (
+                  <React.Fragment key={logId}>
+                    {/* Main Row */}
+                    <TableRow>
+                      <TableCell>{log.ipAddress}</TableCell>
+                      <TableCell>{log.responseTime}</TableCell>
+                      <TableCell>{log.timestamp}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleToggle(logId)}>
+                          {expandedRows === logId ? <ExpandLess /> : <ExpandMore />}
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Expanded Row with log details */}
+                    <TableRow>
+                      <TableCell colSpan={4} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                        <Collapse in={expandedRows === logId} timeout="auto" unmountOnExit>
+                          <Box margin={2}>
+                            <Typography>
+                              <strong>User Agent:</strong> {log.userAgent}
+                            </Typography>
+                            <Typography>
+                              <strong>Geo Location:</strong> {log.geoLocation}
+                            </Typography>
+                            <Typography>
+                              <strong>Request Method:</strong> {log.requestMethod}
+                            </Typography>
+                            <Typography>
+                              <strong>Status Code:</strong> {log.statusCode}
+                            </Typography>
+                            <Typography>
+                              <strong>URL Path:</strong> {log.urlPath}
+                            </Typography>
+                            
+
+                              {log.queryParameters && log.queryParameters !=="{}" ? (
+                              <Typography>
+                                  <strong>Query Parameter:</strong> {log.queryParameters}
+                              </Typography>
+
+                              ):null}
+                              
+                            <Typography>
+                              <strong>Connection Duration:</strong> {log.connectionDuration}
+                            </Typography>
+                            <Typography>
+                              <strong>Request Type:</strong> {log.requestMethod}
+                            </Typography>
+                            <Typography>
+                                  <strong>Status Code:</strong> {log.statusCode}
+                                </Typography>
+
+                                {log.cookies && log.cookies !== "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]" ? (
+                                  <Typography>
+                                    <strong>Cookies:</strong> {log.cookies}
+                                  </Typography>
+                                ) : null}
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </Box>
   );
