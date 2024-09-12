@@ -11,9 +11,10 @@ import BlockedRequestsChart from "components/BlockedRequestsChart";
 import { PointOfSale, Traffic } from "@mui/icons-material";
 import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon, PanTool } from "@mui/icons-material";
 
-const Health_url="https://api.pradyun.me/health";
-const speed_url="https://api.pradyun.me/speed";
-const time_url="https://api.pradyun.me/time";
+const Health_url = "https://api.pradyun.me/health";
+const speed_url = "https://api.pradyun.me/speed";
+const time_url = "https://api.pradyun.me/time";
+const top_url = "https://api.pradyun.me/top";
 
 const generateRandomIP = () => {
   return Array(4)
@@ -43,47 +44,54 @@ const Dashboard = () => {
 
   const [data] = useState(generateRandomData(500));
   const [isLoading, setIsLoading] = useState(false);
-  const [serverUptime, setServerUptime] = useState("N/A");
-  const [serverDowntime, setServerDowntime] = useState("N/A");
-  const [serverHealth, setServerHealth] = useState("N/A");
-  const [ setNetworkSpeed] = useState("N/A");
+  const [serverUptime, setServerUptime] = useState("656");
+  const [serverDowntime, setServerDowntime] = useState("26");
+  const [serverHealth, setServerHealth] = useState("Healthy");
 
- /* eslint-disable react-hooks/exhaustive-deps */
-useEffect(() => {
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      // Fetch uptime and downtime
-      const timeResponse = await fetch(time_url);
-      console.log(timeResponse);
-      const resolvedData= await timeResponse.json()
-     console.log(resolvedData.uptime);
+  // State for the new data you want to show
+  const [totalRequestsData, setTotalRequestsData] = useState("560");
+  const [blockedRequestsData, setBlockedRequestsData] = useState("457");
+  const [blockedPercentage, setBlockedPercentage] = useState("70 ");
 
-  
-      setServerUptime(Math.round(resolvedData.uptime/60));
-      setServerDowntime(Math.round(resolvedData.downtime/60));
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch uptime and downtime
+        const timeResponse = await fetch(time_url);
+        const resolvedTimeData = await timeResponse.json();
 
-      // Fetch server health
-      const healthResponse = await fetch(Health_url);
-      const healthStatus= await healthResponse.json();
-      console.log(healthStatus);
-      setServerHealth(healthStatus.status);
+        setServerUptime(Math.round(resolvedTimeData.uptime / 60));
+        setServerDowntime(Math.round(resolvedTimeData.downtime / 60));
 
-      // Fetch network speed
-      const speedResponse = await fetch(speed_url);
-      console.log(healthResponse)
-      const { speed } = speedResponse.data;
-      setNetworkSpeed(speed);
+        // Fetch server health
+        const healthResponse = await fetch(Health_url);
+        const healthStatus = await healthResponse.json();
+        setServerHealth(healthStatus.status);
 
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    setIsLoading(false);
-  };
+        // Fetch network speed
+        const speedResponse = await fetch(speed_url);
+        const speedData = await speedResponse.json();
 
-  fetchData();
-}, []); // Empty dependency array
-/* eslint-enable react-hooks/exhaustive-deps */
+        // Fetch top data (total requests, blocked requests)
+        const topResponse = await fetch(top_url);
+        const topData = await topResponse.json();
+        const { total_requests, blocked_requests } = topData;
+
+        setTotalRequestsData(total_requests);
+        setBlockedRequestsData(blocked_requests);
+
+        // Calculate blocked percentage
+        const percentage = ((blocked_requests / total_requests) * 100).toFixed(2);
+        setBlockedPercentage(percentage);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   const handleRowClick = (params) => {
     if (params.field === "userId") {
@@ -169,25 +177,25 @@ useEffect(() => {
             title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Total Queries</Typography>}
             value={
               <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
-                {data.length}
+                {totalRequestsData}
               </Typography>
             }
             icon={<QueryStatsIcon sx={{ color: theme.palette.secondary[300], fontSize: "65px" }} />}
           />
         </Box>
+        
 
         <Box gridColumn="span 3" display="flex" justifyContent="center">
           <StatBox
             title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Queries Blocked</Typography>}
             value={
               <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
-                {data.filter((row) => row.requestStatus === "Blocked").length}
+                {blockedRequestsData}
               </Typography>
             }
             icon={<DoDisturbAltRoundedIcon sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
           />
         </Box>
-
         <Box gridColumn="span 3" display="flex" justifyContent="center">
           <StatBox
             title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Domains On Add list</Typography>}
@@ -205,13 +213,12 @@ useEffect(() => {
             title={<Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>Block %</Typography>}
             value={
               <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
-                71%
+                {blockedPercentage}%
               </Typography>
             }
             icon={<PanTool sx={{ color: theme.palette.secondary[300], fontSize: "55px" }} />}
           />
         </Box>
-
         {/* BlockedRequestsChart with updated styling */}
         <Box
           gridColumn="span 12"
@@ -226,8 +233,7 @@ useEffect(() => {
           />
         </Box>
 
-        {/* Table and other components */}
-        <Box
+             <Box
           gridColumn="span 8"
           gridRow="span 3"
           sx={{
@@ -277,7 +283,7 @@ useEffect(() => {
             Server Status
           </Typography>
 
-          <StatBox
+           <StatBox
             title={<Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Server On Time</Typography>}
             value={`${serverUptime} Hours`}
             icon={
