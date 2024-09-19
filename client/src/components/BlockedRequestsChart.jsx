@@ -64,9 +64,9 @@ const BlockedRequestsChart = () => {
         pointBorderWidth={2}
         pointBorderColor={theme.palette.background.paper}
         pointLabelYOffset={-10}
-        enableArea={false} 
+        enableArea={true} 
         enableSlices="x"
-        lineWidth={2}
+        lineWidth={4}
         useMesh={true}
         legends={[
           {

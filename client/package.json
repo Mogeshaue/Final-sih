@@ -25,7 +25,9 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
     "proxy": "https://api.pradyun.me"
+    
   },
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -39,6 +41,7 @@
       "react-app/jest"
     ]
   },
+ 
   "browserslist": {
     "production": [
       ">0.2%",

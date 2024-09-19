@@ -11,10 +11,10 @@ import BlockedRequestsChart from "components/BlockedRequestsChart";
 import { PointOfSale, Traffic } from "@mui/icons-material";
 import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon, PanTool } from "@mui/icons-material";
 
-const Health_url = "https://api.pradyun.me/health";
-const speed_url = "https://api.pradyun.me/speed";
-const time_url = "https://api.pradyun.me/time";
-const top_url = "https://api.pradyun.me/top";
+const Health_url = "";
+//const speed_url = "";
+const time_url = "";
+const top_url = "";
 
 const generateRandomIP = () => {
   return Array(4)
@@ -70,8 +70,8 @@ const Dashboard = () => {
         setServerHealth(healthStatus.status);
 
         // Fetch network speed
-        const speedResponse = await fetch(speed_url);
-        const speedData = await speedResponse.json();
+        // const speedResponse = await fetch(speed_url);
+        // const speedData = await speedResponse.json();
 
         // Fetch top data (total requests, blocked requests)
         const topResponse = await fetch(top_url);

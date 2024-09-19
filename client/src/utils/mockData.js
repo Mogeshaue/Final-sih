@@ -15,4 +15,4 @@ export const generateMockData = () => {
     }
   
     return data;
-  };
+  };  

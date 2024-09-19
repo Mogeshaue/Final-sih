@@ -2,11 +2,152 @@ import React, { useState, useEffect } from "react";
 import { Box, IconButton, Typography, Collapse, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material"; // For down arrow icon
 import axios from "axios";
+import iconImage from './log-img.webp';
 
 const sampleData = [
   {
     timestamp: "2024-09-10T14:57:48.128Z",
-    ipAddress: "::ffff:10.1.75.129",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.129Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.123Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.125Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.126Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.127Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.121Z",
+    ipAddress: "10.1.75.129",
+    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+    geoLocation: "Unknown",
+    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+    urlPath: "/_config.php",
+    queryParameters: "{}",
+    connectionDuration: "2149ms",
+    referrer: "",
+    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+    protocolType: "http",
+    portNumber: "3000",
+    trafficVolume: 0,
+    sessionId: "",
+    requestMethod: "GET",
+    responseTime: 2149,
+    statusCode: 302,
+    requestPayloadSize: 0,
+  },
+  {
+    timestamp: "2024-09-10T14:57:48.120Z",
+    ipAddress: "10.1.75.129",
     userAgent: "Fuzz Faster U Fool v2.1.0-dev",
     geoLocation: "Unknown",
     httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
@@ -69,12 +210,22 @@ const Transactions = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Typography variant="h4" gutterBottom>
+    <Box display="flex" alignItems="center">
+      {/* Icon Image */}
+      
+      
+      {/* Heading */}
+      <Typography style={{ fontSize: "30px", color: "#ffb1ff", fontWeight: "bold" }} variant="h4" gutterBottom>
         IP LOG DATA
       </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        List of IPs and log details
-      </Typography>
+      <img src={iconImage} alt="IP Log Icon" style={{ width: '100px', marginLeft: '10px' ,paddingLeft:'15px'}} />
+    </Box>
+
+    {/* Subtitle */}
+    <Typography variant="subtitle1" gutterBottom>
+      List of IPs and log details
+    </Typography>
+ 
 
       {/* Search Bar */}
       <Box mb="1rem">
@@ -94,15 +245,15 @@ const Transactions = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>IP Address</TableCell>
-                <TableCell>Response Time (ms)</TableCell>
-                <TableCell>Timestamp</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>IP Address</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>Response Time (ms)</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>Timestamp</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }} >Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredLogs.map((log) => {
-                const logId = `${log.responseTime}`; // Unique identifier
+                const logId = `${log.timestamp}`; // Unique identifier
 
                 return (
                   <React.Fragment key={logId}>

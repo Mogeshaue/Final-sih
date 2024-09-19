@@ -1,149 +1,136 @@
 import React, { useMemo } from "react";
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
-import { ResponsiveLine } from "@nivo/line";
-import { useGetSalesQuery } from "state/api";
+import { ResponsiveBar } from "@nivo/bar";
 
-const Monthly = () => {
-  const { data } = useGetSalesQuery();
+// Helper function to generate random blocked requests
+const generateRandomData = () => {
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const randomData = months.map((month) => ({
+    month,
+    blockedRequests: Math.floor(Math.random() * 100) + 1, // Random value between 1 and 100
+  }));
+  return randomData;
+};
+
+const MonthlyBarChart = () => {
   const theme = useTheme();
+  const data = generateRandomData(); // Random data for each month
 
-  const [formattedData] = useMemo(() => {
+  const formattedData = useMemo(() => {
     if (!data) return [];
-
-    const { monthlyData } = data;
-    const totalSalesLine = {
-      id: "totalSales",
-      color: theme.palette.secondary.main,
-      data: [],
-    };
-    const totalUnitsLine = {
-      id: "totalUnits",
-      color: theme.palette.secondary[600],
-      data: [],
-    };
-
-    Object.values(monthlyData).forEach(({ month, totalSales, totalUnits }) => {
-      totalSalesLine.data = [
-        ...totalSalesLine.data,
-        { x: month, y: totalSales },
-      ];
-      totalUnitsLine.data = [
-        ...totalUnitsLine.data,
-        { x: month, y: totalUnits },
-      ];
-    });
-
-    const formattedData = [totalSalesLine, totalUnitsLine];
-    return [formattedData];
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+    
+    // Formatting data for the bar chart
+    return data.map(({ month, blockedRequests }) => ({
+      month,
+      "Blocked Requests": blockedRequests, // Label for x-axis
+    }));
+  }, [data]);
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MONTHLY SALES" subtitle="Chart of monthlysales" />
+      <Header title="MONTHLY BLOCKED REQUESTS" subtitle="Bar chart of monthly blocked requests" />
       <Box height="75vh">
         {data ? (
-          <ResponsiveLine
+          <ResponsiveBar
             data={formattedData}
+            keys={["Blocked Requests"]}
+            indexBy="month"
+            layout="horizontal" // Horizontal bar chart
+            margin={{ top: 50, right: 50, bottom: 70, left: 100 }} // Adjust left margin for Y-axis labels
+            padding={0.3}
+            colors={{ scheme: "category10" }} // Use different colors for each bar
             theme={{
               axis: {
                 domain: {
                   line: {
-                    stroke: theme.palette.secondary[200],
+                    stroke: "white", // White color for axis line
                   },
                 },
                 legend: {
                   text: {
-                    fill: theme.palette.secondary[200],
+                    fill: "white", // White color for legends
                   },
                 },
                 ticks: {
                   line: {
-                    stroke: theme.palette.secondary[200],
+                    stroke: "white", // White color for ticks
                     strokeWidth: 1,
                   },
                   text: {
-                    fill: theme.palette.secondary[200],
+                    fill: "white", // White color for tick labels
                   },
                 },
               },
               legends: {
                 text: {
-                  fill: theme.palette.secondary[200],
+                  fill: "white", // White color for legend text
                 },
               },
               tooltip: {
                 container: {
-                  color: theme.palette.primary.main,
+                  background: theme.palette.background.paper,
+                  color: theme.palette.primary.main, // Color for tooltip text
                 },
               },
             }}
-            colors={{ datum: "color" }}
-            margin={{ top: 50, right: 50, bottom: 70, left: 60 }}
-            xScale={{ type: "point" }}
-            yScale={{
-              type: "linear",
-              min: "auto",
-              max: "auto",
-              stacked: false,
-              reverse: false,
-            }}
-            yFormat=" >-.2f"
-            // curve="catmullRom"
+            borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
             axisTop={null}
             axisRight={null}
             axisBottom={{
-              orient: "bottom",
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 90,
-              legend: "Month",
-              legendOffset: 60,
-              legendPosition: "middle",
-            }}
-            axisLeft={{
-              orient: "left",
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total",
-              legendOffset: -50,
+              legend: "Blocked Requests",
               legendPosition: "middle",
+              legendOffset: 50,
+              tickColor: "white", // White color for x-axis tick labels
             }}
-            enableGridX={false}
-            enableGridY={false}
-            pointSize={10}
-            pointColor={{ theme: "background" }}
-            pointBorderWidth={2}
-            pointBorderColor={{ from: "serieColor" }}
-            pointLabelYOffset={-12}
-            useMesh={true}
+            axisLeft={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: "Month",
+              legendPosition: "middle",
+              legendOffset: -70,
+              tickColor: "white", // White color for y-axis tick labels
+            }}
+            labelSkipWidth={12}
+            labelSkipHeight={12}
+            labelTextColor={{
+              from: "color",
+              modifiers: [["darker", 1.6]],
+            }}
             legends={[
               {
-                anchor: "top-right",
+                dataFrom: "keys",
+                anchor: "bottom-right",
                 direction: "column",
                 justify: false,
-                translateX: 50,
+                translateX: 120,
                 translateY: 0,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 80,
+                itemsSpacing: 2,
+                itemWidth: 100,
                 itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                itemDirection: "left-to-right",
+                itemOpacity: 0.85,
+                symbolSize: 20,
                 effects: [
                   {
                     on: "hover",
                     style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
                       itemOpacity: 1,
                     },
                   },
                 ],
               },
             ]}
+            animate={true}
+            motionStiffness={90}
+            motionDamping={15}
           />
         ) : (
           <>Loading...</>
@@ -153,4 +140,4 @@ const Monthly = () => {
   );
 };
 
-export default Monthly;
+export default MonthlyBarChart;
