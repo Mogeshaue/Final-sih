@@ -7,10 +7,10 @@ import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Dashboard from "scenes/dashboard";
 
-import Customers from "scenes/customers";
+import Customers from "scenes/waf-controls";
 import Transactions from "scenes/transactions";
 import Geography from "scenes/geography";
-import Overview from "scenes/overview";
+import Overview from "scenes/Monitoring-attack";
 import Daily from "scenes/daily";
 import Monthly from "scenes/monthly";
 import Breakdown from "scenes/breakdown";
@@ -30,13 +30,13 @@ function App() {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               
-              <Route path="/requested Ip" element={<Customers />} />
+              <Route path="/WAF controls" element={<Customers />} />
               <Route path="/log data" element={<Transactions />} />
               <Route path="/Ip location" element={<Geography />} />
-              <Route path="/overview" element={<Overview />} />
+              <Route path="/Monitoring Attacks" element={<Overview />} />
               <Route path="/daily" element={<Daily />} />
               <Route path="/monthly" element={<Monthly />} />
-              <Route path="/breakdown" element={<Breakdown />} />
+              <Route path="/Report" element={<Breakdown />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/performance" element={<Performance />} />
             </Route>

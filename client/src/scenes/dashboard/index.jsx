@@ -327,7 +327,7 @@ const Dashboard = () => {
           p="1rem"
           borderRadius="0.55rem"
         >
-          <OverviewChart view="sales" isDashboard={true} />
+          
         </Box>
       </Box>
     </Box>

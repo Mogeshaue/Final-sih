@@ -1,179 +1,62 @@
 import React, { useState, useEffect } from "react";
-import { Box, IconButton, Typography, Collapse, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  Collapse,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
+} from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material"; // For down arrow icon
 import axios from "axios";
 import iconImage from './log-img.webp';
 
-const sampleData = [
-  {
-    timestamp: "2024-09-10T14:57:48.128Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.129Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.123Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.125Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.126Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.127Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.121Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  {
-    timestamp: "2024-09-10T14:57:48.120Z",
-    ipAddress: "10.1.75.129",
-    userAgent: "Fuzz Faster U Fool v2.1.0-dev",
-    geoLocation: "Unknown",
-    httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
-    urlPath: "/_config.php",
-    queryParameters: "{}",
-    connectionDuration: "2149ms",
-    referrer: "",
-    cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
-    protocolType: "http",
-    portNumber: "3000",
-    trafficVolume: 0,
-    sessionId: "",
-    requestMethod: "GET",
-    responseTime: 2149,
-    statusCode: 302,
-    requestPayloadSize: 0,
-  },
-  // Additional sample logs...
-];
+// Generate random log data for demonstration purposes
+const generateRandomLogs = (numLogs) => {
+  const logs = [];
+  for (let i = 0; i < numLogs; i++) {
+    const randomTime = new Date(Date.now() - Math.random() * 1000000000).toISOString();
+    logs.push({
+      timestamp: randomTime,
+      ipAddress: `10.1.75.${Math.floor(Math.random() * 255)}`,
+      userAgent: "Fuzz Faster U Fool v2.1.0-dev",
+      geoLocation: "Unknown",
+      httpHeaders: '{"host":"10.1.75.201:3000","user-agent":"Fuzz Faster U Fool v2.1.0-dev","accept-encoding":"gzip"}',
+      urlPath: "/_config.php",
+      queryParameters: "{}",
+      connectionDuration: `${Math.floor(Math.random() * 3000)}ms`,
+      referrer: "",
+      cookies: "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]",
+      protocolType: "http",
+      portNumber: "3000",
+      trafficVolume: Math.floor(Math.random() * 100),
+      sessionId: "",
+      requestMethod: "GET",
+      responseTime: Math.floor(Math.random() * 3000),
+      statusCode: 302,
+      requestPayloadSize: Math.floor(Math.random() * 1000),
+    });
+  }
+  return logs;
+};
 
+// Main Component
 const Transactions = () => {
-  // State for managing logs, expanded IPs, and search input
   const [logs, setLogs] = useState([]);
   const [expandedRows, setExpandedRows] = useState(null); // Tracks which row is expanded
   const [searchInput, setSearchInput] = useState(""); // For search functionality
   const [isLoading, setIsLoading] = useState(true);
+  const [logRetention, setLogRetention] = useState(7); // Log retention period in days
 
   // Fetch logs from the API (with error handling and fallback to sample data)
   useEffect(() => {
@@ -184,51 +67,56 @@ const Transactions = () => {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching logs, using sample data instead:", error);
-        setLogs(sampleData); // Use sample data in case of error
+        setLogs(generateRandomLogs(50)); // Generate random logs in case of error
         setIsLoading(false);
       }
     };
 
     fetchLogs();
   }, []);
-  
 
   // Handle search input change
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
 
-  // Toggle expanded state for a specific log entry (using IP address and timestamp)
+  // Handle log retention period change
+  const handleLogRetentionChange = (event) => {
+    setLogRetention(event.target.value);
+  };
+
+  // Toggle expanded state for a specific log entry (using timestamp)
   const handleToggle = (logId) => {
     setExpandedRows((prevExpanded) => (prevExpanded === logId ? null : logId));
   };
 
-  // Filter logs based on search input
-  const filteredLogs = logs.filter((log) =>
-    log.ipAddress.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  // Filter logs based on search input and log retention period
+  const filteredLogs = logs
+    .filter((log) => log.ipAddress.toLowerCase().includes(searchInput.toLowerCase()))
+    .filter((log) => {
+      const logDate = new Date(log.timestamp);
+      const retentionDate = new Date();
+      retentionDate.setDate(retentionDate.getDate() - logRetention);
+      return logDate >= retentionDate;
+    });
 
   return (
     <Box m="1.5rem 2.5rem">
-    <Box display="flex" alignItems="center">
-      {/* Icon Image */}
-      
-      
-      {/* Heading */}
-      <Typography style={{ fontSize: "30px", color: "#ffb1ff", fontWeight: "bold" }} variant="h4" gutterBottom>
-        IP LOG DATA
+      <Box display="flex" alignItems="center">
+        {/* Heading */}
+        <Typography style={{ fontSize: "30px", color: "#ffb1ff", fontWeight: "bold" }} variant="h4" gutterBottom>
+          IP LOG DATA
+        </Typography>
+        <img src={iconImage} alt="IP Log Icon" style={{ width: '100px', marginLeft: '10px', paddingLeft: '15px' }} />
+      </Box>
+
+      {/* Subtitle */}
+      <Typography variant="subtitle1" gutterBottom>
+        List of IPs and log details
       </Typography>
-      <img src={iconImage} alt="IP Log Icon" style={{ width: '100px', marginLeft: '10px' ,paddingLeft:'15px'}} />
-    </Box>
 
-    {/* Subtitle */}
-    <Typography variant="subtitle1" gutterBottom>
-      List of IPs and log details
-    </Typography>
- 
-
-      {/* Search Bar */}
-      <Box mb="1rem">
+      {/* Search Bar and Log Retention Dropdown */}
+      <Box display="flex" mb="1rem" justifyContent="space-between">
         <TextField
           label="Search by IP"
           variant="outlined"
@@ -236,6 +124,21 @@ const Transactions = () => {
           value={searchInput}
           onChange={handleSearchInputChange}
         />
+
+        {/* Dropdown for selecting log retention period */}
+        <FormControl variant="outlined" style={{ width: '200px', marginLeft: '20px' }}>
+          <InputLabel>Retention Period</InputLabel>
+          <Select
+            value={logRetention}
+            onChange={handleLogRetentionChange}
+            label="Retention Period"
+          >
+            <MenuItem value={1}>1 Day</MenuItem>
+            <MenuItem value={7}>7 Days</MenuItem>
+            <MenuItem value={30}>30 Days</MenuItem>
+            <MenuItem value={90}>90 Days</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       {isLoading ? (
@@ -245,10 +148,10 @@ const Transactions = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>IP Address</TableCell>
-                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>Response Time (ms)</TableCell>
-                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }}>Timestamp</TableCell>
-                <TableCell style={{ fontSize: "18px", color: "#00829b", fontweight:"bold"  }} >Action</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontWeight: "bold" }}>IP Address</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontWeight: "bold" }}>Response Time (ms)</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontWeight: "bold" }}>Timestamp</TableCell>
+                <TableCell style={{ fontSize: "18px", color: "#00829b", fontWeight: "bold" }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -289,30 +192,19 @@ const Transactions = () => {
                             <Typography>
                               <strong>URL Path:</strong> {log.urlPath}
                             </Typography>
-                            
-
-                              {log.queryParameters && log.queryParameters !=="{}" ? (
+                            {log.queryParameters && log.queryParameters !== "{}" ? (
                               <Typography>
-                                  <strong>Query Parameter:</strong> {log.queryParameters}
+                                <strong>Query Parameter:</strong> {log.queryParameters}
                               </Typography>
-
-                              ):null}
-                              
+                            ) : null}
                             <Typography>
                               <strong>Connection Duration:</strong> {log.connectionDuration}
                             </Typography>
-                            <Typography>
-                              <strong>Request Type:</strong> {log.requestMethod}
-                            </Typography>
-                            <Typography>
-                                  <strong>Status Code:</strong> {log.statusCode}
-                                </Typography>
-
-                                {log.cookies && log.cookies !== "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]" ? (
-                                  <Typography>
-                                    <strong>Cookies:</strong> {log.cookies}
-                                  </Typography>
-                                ) : null}
+                            {log.cookies && log.cookies !== "[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]" ? (
+                              <Typography>
+                                <strong>Cookies:</strong> {log.cookies}
+                              </Typography>
+                            ) : null}
                           </Box>
                         </Collapse>
                       </TableCell>

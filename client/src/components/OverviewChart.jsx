@@ -1,112 +1,142 @@
-import React, { useMemo } from "react";
-import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
-import { useGetSalesQuery } from "state/api";
+import React, { useState, useEffect } from "react";
+import { Box, FormControl, MenuItem, InputLabel, Select, Typography, TextField } from "@mui/material";
+import ReactApexChart from "react-apexcharts";
+import WAFSpikeDetectionGraph from "./spike-detection";
 
-const OverviewChart = ({ isDashboard = false, view }) => {
-  const theme = useTheme();
-  const { data, isLoading } = useGetSalesQuery();
+// Helper function to generate random data
+const generateRandomData = (size) => Array.from({ length: size }, () => Math.floor(Math.random() * 100));
 
-  const [totalSalesLine, totalUnitsLine] = useMemo(() => {
-    if (!data) return [];
+const OverviewChart = () => {
+  const [timeView, setTimeView] = useState("Real-time");
+  const [graphType, setGraphType] = useState("line");
+  const [lineData, setLineData] = useState([]);
+  const [histogramData, setHistogramData] = useState([]);
+  const [xAxisCategories, setXAxisCategories] = useState([]);
 
-    const { monthlyData } = data;
-   
-  
+  useEffect(() => {
+    let interval;
+    
+    // Update data based on the timeView
+    if (timeView === "Real-time") {
+      interval = setInterval(() => {
+        const newData = generateRandomData(10);
+        setLineData((prevData) => {
+          const updatedData = [...prevData, ...newData];
+          return updatedData.slice(-10); // Keep only the last 10 data points
+        });
+        setHistogramData((prevData) => [...prevData, Math.floor(Math.random() * 100)].slice(-10)); // Keep last 10 blocked requests
+        setXAxisCategories([...Array(10).keys()].map((i) => `T${i + 1}`)); // Real-time labels
+      }, 1000);
+    } else {
+      let size;
+      if (timeView === "Hourly") size = 24;
+      else if (timeView === "Daily") size = 30;
+      else if (timeView === "30 Days") size = 30;
+      else if (timeView === "60 Days") size = 60;
+      else if (timeView === "90 Days") size = 90;
 
-    Object.values(monthlyData).reduce(
-      (acc, { month, totalSales, totalUnits }) => {
-        const curSales = acc.sales + totalSales;
-        const curUnits = acc.units + totalUnits;
+      const staticData = generateRandomData(size);
+      setLineData(staticData);
+      setHistogramData(staticData);
+      
+      if (timeView === "Hourly") setXAxisCategories([...Array(24).keys()].map((i) => `Hour ${i + 1}`));
+      else setXAxisCategories([...Array(size).keys()].map((i) => `Day ${i + 1}`)); // For daily and day views
+    }
 
-        totalSalesLine.data = [
-          ...totalSalesLine.data,
-          { x: month, y: curSales },
-        ];
-        totalUnitsLine.data = [
-          ...totalUnitsLine.data,
-          { x: month, y: curUnits },
-        ];
+    return () => clearInterval(interval); // Clear interval for real-time updates
+  }, [timeView]);
 
-        return { sales: curSales, units: curUnits };
+  const handleTimeViewChange = (value) => {
+    setTimeView(value);
+  };
+
+  // Line chart options
+  const lineChartOptions = {
+    chart: {
+      id: "line-chart",
+      type: "line",
+      height: 350,
+      animations: {
+        enabled: true,
+        easing: "linear",
+        dynamicAnimation: { speed: 1000 },
       },
-      { sales: 0, units: 0 }
-    );
+      zoom: { enabled: false },
+    },
+    xaxis: {
+      categories: xAxisCategories,
+    },
+    yaxis: { max: 100 },
+    stroke: { curve: "smooth" },
+  };
 
-    return [[totalSalesLine], [totalUnitsLine]];
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (!data || isLoading) return "Loading...";
+  // Histogram chart options
+  const histogramOptions = {
+    chart: {
+      id: "histogram",
+      type: "bar",
+      height: 350,
+    },
+    xaxis: {
+      categories: xAxisCategories, // Set categories based on the time view
+    },
+    yaxis: { max: 100 },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "55%",
+        endingShape: "rounded",
+      },
+    },
+    fill: {
+      opacity: 1,
+    },
+  };
 
   return (
-    <ResponsiveLine
-      data={data}
-      theme={{
-        axis: {
-          ticks: {
-            text: {
-              fontSize: 14, // Increase font size
-              fill: theme.palette.text.primary, // Ensure the font color matches your theme
-            },
-          },
-        },
-        tooltip: {
-          container: {
-            fontSize: 14, // Adjust tooltip font size
-          },
-        },
-      }}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: 'point' }}
-      yScale={{
-        type: 'linear',
-        min: 'auto',
-        max: 'auto',
-        stacked: true,
-        reverse: false,
-      }}
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        orient: 'bottom',
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'Time',
-        legendOffset: 36,
-        legendPosition: 'middle',
-      }}
-      axisLeft={{
-        orient: 'left',
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'Sales/Units',
-        legendOffset: -40,
-        legendPosition: 'middle',
-      }}
-      tooltip={({ point }) => (
-        <div
-          style={{
-            background: theme.palette.background.paper,
-            padding: '10px',
-            borderRadius: '5px',
-            boxShadow: theme.shadows[3],
-          }}
+    <Box m="2rem" sx={{ backgroundColor: "#292929", padding: "1.5rem", borderRadius: "0.75rem", color: "white" }}>
+      <Typography variant="h4" gutterBottom>
+        DDoS Monitoring
+      </Typography>
+
+      <FormControl sx={{ mt: "1rem", minWidth: 120 }}>
+        <InputLabel>Time View</InputLabel>
+        <Select value={timeView} onChange={(e) => handleTimeViewChange(e.target.value)}>
+          <MenuItem value="Real-time">Real-time</MenuItem>
+          <MenuItem value="Hourly">Hourly</MenuItem>
+          <MenuItem value="Daily">Day</MenuItem>
+          <MenuItem value="30 Days">30 Days</MenuItem>
+          <MenuItem value="60 Days">60 Days</MenuItem>
+          <MenuItem value="90 Days">90 Days</MenuItem>
+        </Select>
+      </FormControl>
+
+      <Box display="flex" justifyContent="flex-end" sx={{ mt: "1rem" }}>
+        <TextField
+          label="Graph Type"
+          select
+          value={graphType}
+          onChange={(e) => setGraphType(e.target.value)}
+          sx={{ width: "200px", backgroundColor: "#292929", borderRadius: "0.5rem" }}
         >
-          <strong>
-            {point.serieId}: {point.data.yFormatted}
-          </strong>
-        </div>
-      )}
-      enableSlices="x" // This can be used for tooltips that display values across the same x-axis value
-      pointSize={10}
-      pointColor={{ theme: 'background' }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: 'serieColor' }}
-      pointLabelYOffset={-12}
-      useMesh={true} // Ensure mesh for better hover accuracy
-    />
+          <MenuItem value="line">Line Graph</MenuItem>
+          <MenuItem value="histogram">Histogram</MenuItem>
+          <MenuItem value="spike">Spike Detection</MenuItem>
+        </TextField>
+      </Box>
+
+      <Box height="75vh" sx={{ mt: "1.5rem" }}>
+        {graphType === "line" && (
+          <ReactApexChart options={lineChartOptions} series={[{ name: "Requests", data: lineData }]} type="line" height={350} />
+        )}
+        {graphType === "histogram" && (
+          <ReactApexChart options={histogramOptions} series={[{ name: "Blocked Requests", data: histogramData }]} type="bar" height={350} />
+        )}
+        {graphType === "spike" && (
+          <WAFSpikeDetectionGraph timeView={timeView} />
+        )}
+      </Box>
+    </Box>
   );
 };
 

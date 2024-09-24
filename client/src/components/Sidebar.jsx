@@ -44,7 +44,7 @@ const navItems = [
   },
  
   {
-    text: "Requested IP",
+    text: "WAF controls",
     icon: <Groups2Outlined />,
   },
   {
@@ -60,7 +60,7 @@ const navItems = [
     icon: null,
   },
   {
-    text: "Overview",
+    text: "Monitoring Attacks",
     icon: <PointOfSaleOutlined />,
   },
   {
@@ -72,7 +72,7 @@ const navItems = [
     icon: <CalendarMonthOutlined />,
   },
   {
-    text: "Breakdown",
+    text: "Report",
     icon: <PieChartOutlined />,
   },
   {
