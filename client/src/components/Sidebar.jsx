@@ -63,30 +63,29 @@ const navItems = [
     text: "Monitoring Attacks",
     icon: <PointOfSaleOutlined />,
   },
+  
   {
-    text: "Daily",
-    icon: <TodayOutlined />,
+    text: "Bocked Data",
+    icon: <CalendarMonthOutlined />,
   },
   {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
+    text: "Load Balancing",
+    icon: <TrendingUpOutlined />,
+  },
+ 
+  {
+    text: "Management",
+    icon: null,
   },
   {
     text: "Report",
     icon: <PieChartOutlined />,
   },
   {
-    text: "Management",
-    icon: null,
+    text: "Reovery",
+    icon: <TodayOutlined />,
   },
-  {
-    text: "Admin",
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
-  },
+ 
 ];
 
 const Sidebar = ({

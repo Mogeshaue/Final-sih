@@ -65,7 +65,20 @@ const WAFSpikeDetectionGraph = ({ timeView }) => {
       },
     },
     xaxis: {
-      categories: timeLabels,
+  
+      categories: timeLabels, // Set categories based on the real-time data
+      labels: {
+        style: {
+          colors: '#FFFFFF', // X-axis labels white
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#FFFFFF', // Y-axis labels white
+        },
+      },
     },
     stroke: {
       curve: "smooth",
@@ -77,6 +90,13 @@ const WAFSpikeDetectionGraph = ({ timeView }) => {
     title: {
       text: "Traffic Spike Detection",
       align: "center",
+    },
+    tooltip: {
+      theme: 'dark',
+      style: {
+        backgroundColor: '#000000', // Black tooltip background
+        color: '#FFFFFF', // White tooltip text
+      },
     },
   };
 

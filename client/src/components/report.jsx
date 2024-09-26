@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Button, Checkbox, FormControlLabel, Typography, useTheme, TextField, MenuItem, Select } from '@mui/material';
-import { DownloadOutlined, ArrowDropDown } from '@mui/icons-material';
+import { DownloadOutlined } from '@mui/icons-material';
 import ApexChart from 'react-apexcharts';
+
 
 const ReportPage = () => {
   const theme = useTheme();
@@ -30,9 +31,13 @@ const ReportPage = () => {
 
   const handleDownloadReport = () => {
     // Logic for downloading the selected data
-    console.log('Selected data:', selectedData);
-    console.log('File Type:', fileType);
-    console.log('Predefined Set:', predefinedSet);
+    const fileUrl = '../../src/assets/defautl-file.csv'; // Adjust to your file path
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', 'report.csv'); // Default file name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -108,12 +113,16 @@ const ReportPage = () => {
               <Button
                 onClick={handleDownloadReport}
                 sx={{
-                  backgroundColor: theme.palette.secondary.light,
+                  backgroundColor: theme.palette.secondary.light  ,
                   color: theme.palette.background.alt,
                   fontSize: '14px',
                   fontWeight: 'bold',
                   padding: '6px 12px',
                   marginLeft: '10px',
+                  '&:hover': {
+                    backgroundColor: 'white', // Change to white on hover
+                    color: 'black', // Change text color to black
+                  },
                 }}
               >
                 Download All Chart Data
@@ -137,6 +146,10 @@ const ReportPage = () => {
                   fontWeight: 'bold',
                   padding: '6px 12px',
                   marginLeft: '10px',
+                  '&:hover': {
+                    backgroundColor: 'white', // Change to white on hover
+                    color: 'black', // Change text color to black
+                  },
                 }}
               >
                 Download Only Log Data
@@ -160,6 +173,10 @@ const ReportPage = () => {
                   fontWeight: 'bold',
                   padding: '6px 12px',
                   marginLeft: '10px',
+                  '&:hover': {
+                    backgroundColor: 'white', // Change to white on hover
+                    color: 'black', // Change text color to black
+                  },
                 }}
               >
                 Download Traffic Spikes Data
@@ -180,6 +197,10 @@ const ReportPage = () => {
             fontWeight: 'bold',
             padding: '12px 24px',
             marginBottom: '30px',
+            '&:hover': {
+              backgroundColor: 'white', // Change to white on hover
+              color: 'black', // Change text color to black
+            },
           }}
         >
           <DownloadOutlined sx={{ mr: '10px' }} />
@@ -188,11 +209,28 @@ const ReportPage = () => {
 
         {/* Performance Chart */}
         <ApexChart
-          options={{ chart: { type: 'pie' }, labels: ['Memory Usage', 'CPU Usage'] }}
-          series={[60, 40]}
-          type="pie"
-          width="400"
-        />
+  options={{
+    chart: {
+      type: 'pie',
+      toolbar: {
+        show: true,
+      },
+    },
+    labels: ['Memory Usage', 'CPU Usage'],
+    legend: {
+      labels: {
+        colors: '#FFFFFF', // Set legend text color to white
+      },
+    },
+    // Optionally set colors for the pie segments
+    colors: ['#008FFB', '#FF4560'], // Default colors for pie chart segments
+  }}
+  series={[60, 40]}
+  type="pie"
+  width="500" // Increased width
+  height="400" // Increased height for better visibility
+/>
+
       </Box>
     </Box>
   );

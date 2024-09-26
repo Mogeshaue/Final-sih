@@ -5,11 +5,11 @@ import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import OverviewChart from "components/OverviewChart";
+
 import StatBox from "components/StatBox";
 import BlockedRequestsChart from "components/BlockedRequestsChart";
 import { PointOfSale, Traffic } from "@mui/icons-material";
-import { DownloadOutlined, QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon, PanTool } from "@mui/icons-material";
+import { QueryStats as QueryStatsIcon, DoDisturbAltRounded as DoDisturbAltRoundedIcon, StorageRounded as StorageRoundedIcon, PanTool } from "@mui/icons-material";
 
 const Health_url = "";
 //const speed_url = "";
@@ -93,11 +93,7 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const handleRowClick = (params) => {
-    if (params.field === "userId") {
-      navigate("/customers", { state: { ipAddress: params.value } });
-    }
-  };
+
 
   const columns = [
     {
@@ -111,7 +107,6 @@ const Dashboard = () => {
       flex: 1,
       renderCell: (params) => (
         <Button
-          onClick={() => handleRowClick(params)}
           style={{ fontSize: "14px", color: "white" }}
         >
           {params.value}
@@ -144,20 +139,7 @@ const Dashboard = () => {
           subtitle={<Typography sx={{ fontSize: "18px" }}>Welcome to your Cyber dashboard</Typography>}
         />
 
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
-              fontSize: "16px",
-              fontWeight: "bold",
-              padding: "12px 24px",
-            }}
-          >
-            <DownloadOutlined sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box>
+       
       </FlexBetween>
 
       <Box
@@ -233,7 +215,7 @@ const Dashboard = () => {
           />
         </Box>
 
-             <Box
+        <Box
           gridColumn="span 8"
           gridRow="span 3"
           sx={{
@@ -252,7 +234,7 @@ const Dashboard = () => {
               fontSize: "16px",
             },
             "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: "#000000",
+              backgroundColor: "#292929",
             },
             "& .MuiDataGrid-footerContainer": {
               backgroundColor: theme.palette.background.alt,
@@ -320,15 +302,6 @@ const Dashboard = () => {
           </Box>
         </Box>
 
-        <Box
-          gridColumn="span 8"
-          gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
-        >
-          
-        </Box>
       </Box>
     </Box>
   );

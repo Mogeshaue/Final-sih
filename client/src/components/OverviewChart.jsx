@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Box, FormControl, MenuItem, InputLabel, Select, Typography, TextField } from "@mui/material";
+import { Box, FormControl, MenuItem, InputLabel, Select, Typography, TextField, Button } from "@mui/material";
 import ReactApexChart from "react-apexcharts";
+import dayjs from "dayjs";
 import WAFSpikeDetectionGraph from "./spike-detection";
 
 // Helper function to generate random data
-const generateRandomData = (size) => Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+const generateRealTimeData = (size, interval, unit) => {
+  const data = [];
+  const currentTime = dayjs();
+  for (let i = 0; i < size; i++) {
+    data.push({
+      value: Math.floor(Math.random() * 100),
+      time: currentTime.subtract(size - i, unit).format(interval),
+    });
+  }
+  return data;
+};
 
 const OverviewChart = () => {
-  const [timeView, setTimeView] = useState("Real-time");
+  const [timeView, setTimeView] = useState("Hourly");
   const [graphType, setGraphType] = useState("line");
   const [lineData, setLineData] = useState([]);
   const [histogramData, setHistogramData] = useState([]);
@@ -15,35 +26,54 @@ const OverviewChart = () => {
 
   useEffect(() => {
     let interval;
-    
-    // Update data based on the timeView
+
     if (timeView === "Real-time") {
       interval = setInterval(() => {
-        const newData = generateRandomData(10);
+        const newData = generateRealTimeData(1, 'HH:mm:ss', 'second');
         setLineData((prevData) => {
-          const updatedData = [...prevData, ...newData];
-          return updatedData.slice(-10); // Keep only the last 10 data points
+          const updatedData = [...prevData, newData[0].value];
+          return updatedData.slice(-10); // Keep last 10 data points
         });
-        setHistogramData((prevData) => [...prevData, Math.floor(Math.random() * 100)].slice(-10)); // Keep last 10 blocked requests
-        setXAxisCategories([...Array(10).keys()].map((i) => `T${i + 1}`)); // Real-time labels
+        setHistogramData((prevData) => [...prevData, newData[0].value].slice(-10)); // Keep last 10 data points
+        setXAxisCategories((prevCategories) => {
+          const updatedCategories = [...prevCategories, newData[0].time];
+          return updatedCategories.slice(-10); // Keep last 10 timestamps
+        });
       }, 1000);
     } else {
       let size;
-      if (timeView === "Hourly") size = 24;
-      else if (timeView === "Daily") size = 30;
-      else if (timeView === "30 Days") size = 30;
-      else if (timeView === "60 Days") size = 60;
-      else if (timeView === "90 Days") size = 90;
+      let intervalUnit;
+      let intervalFormat;
 
-      const staticData = generateRandomData(size);
-      setLineData(staticData);
-      setHistogramData(staticData);
-      
-      if (timeView === "Hourly") setXAxisCategories([...Array(24).keys()].map((i) => `Hour ${i + 1}`));
-      else setXAxisCategories([...Array(size).keys()].map((i) => `Day ${i + 1}`)); // For daily and day views
+      if (timeView === "Hourly") {
+        size = 24;
+        intervalUnit = "hour";
+        intervalFormat = "HH:mm";
+      } else if (timeView === "Daily") {
+        size = 30;
+        intervalUnit = "day";
+        intervalFormat = "MM-DD";
+      } else if (timeView === "30 Days") {
+        size = 30;
+        intervalUnit = "day";
+        intervalFormat = "MM-DD";
+      } else if (timeView === "60 Days") {
+        size = 60;
+        intervalUnit = "day";
+        intervalFormat = "MM-DD";
+      } else if (timeView === "90 Days") {
+        size = 90;
+        intervalUnit = "day";
+        intervalFormat = "MM-DD";
+      }
+
+      const staticData = generateRealTimeData(size, intervalFormat, intervalUnit);
+      setLineData(staticData.map((data) => data.value));
+      setHistogramData(staticData.map((data) => data.value));
+      setXAxisCategories(staticData.map((data) => data.time));
     }
 
-    return () => clearInterval(interval); // Clear interval for real-time updates
+    return () => clearInterval(interval);
   }, [timeView]);
 
   const handleTimeViewChange = (value) => {
@@ -62,12 +92,36 @@ const OverviewChart = () => {
         dynamicAnimation: { speed: 1000 },
       },
       zoom: { enabled: false },
+      toolbar: {
+        tools: {
+          download: true, // Keep download option
+        },
+        background: '#000000', // Change toolbar background to black
+      },
     },
     xaxis: {
       categories: xAxisCategories,
+      labels: {
+        style: {
+          colors: '#FFFFFF', // X-axis labels white
+        },
+      },
     },
-    yaxis: { max: 100 },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#FFFFFF', // Y-axis labels white
+        },
+      },
+    },
     stroke: { curve: "smooth" },
+    tooltip: {
+      theme: 'dark',
+      style: {
+        backgroundColor: '#000000', // Black tooltip background
+        color: '#FFFFFF', // White tooltip text
+      },
+    },
   };
 
   // Histogram chart options
@@ -76,11 +130,28 @@ const OverviewChart = () => {
       id: "histogram",
       type: "bar",
       height: 350,
+      toolbar: {
+        tools: {
+          download: true, // Enable download feature
+        },
+        background: '#000000', // Change toolbar background to black
+      },
     },
     xaxis: {
-      categories: xAxisCategories, // Set categories based on the time view
+      categories: xAxisCategories, // Set categories based on the real-time data
+      labels: {
+        style: {
+          colors: '#FFFFFF', // X-axis labels white
+        },
+      },
     },
-    yaxis: { max: 100 },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#FFFFFF', // Y-axis labels white
+        },
+      },
+    },
     plotOptions: {
       bar: {
         horizontal: false,
@@ -136,6 +207,7 @@ const OverviewChart = () => {
           <WAFSpikeDetectionGraph timeView={timeView} />
         )}
       </Box>
+
     </Box>
   );
 };

@@ -14,6 +14,7 @@ const SettingsBox = styled(Box)(({ theme }) => ({
 }));
 
 // ApexChart class for radar chart
+// ApexChart class for radar chart
 class ApexChart extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +24,7 @@ class ApexChart extends React.Component {
         { name: "Blocks", data: [80, 50, 30, 40, 100, 20] }, // Blocked counts per WAF rule
         { name: "Triggers", data: [20, 30, 40, 80, 20, 80] }  // Triggered counts per WAF rule
       ],
+     
       options: {
         chart: {
           height: 500, // Increased the size of the graph
@@ -35,7 +37,11 @@ class ApexChart extends React.Component {
           }
         },
         title: {
-          text: 'WAF Rule Radar Chart'
+          text: 'WAF Rule Radar Chart',
+          style: {
+            color: '#FFFFFF',  // Title color set to white
+            fontSize: '22px',
+          },
         },
         stroke: {
           width: 5
@@ -55,7 +61,7 @@ class ApexChart extends React.Component {
           }
         },
         xaxis: {
-          categories: ['SQL Injection', 'Cross-Site Scripting', 'DDoS Attack', 'CSRF', 'File Upload', 'Invalid User Agent'],
+          categories: ['SQL Injection', 'Cross-Site Scripting', 'Command Injection', 'CSRF', 'File Upload', 'Invalid User Agent'],
           labels: {
             style: {
               colors: '#ffffff', // Changed X-axis labels color
@@ -70,11 +76,20 @@ class ApexChart extends React.Component {
             show: true,
             color: '#ffffff' // Changed X-axis ticks color
           }
+        },
+        legend: {
+          labels: {
+            colors: '#ffffff' // Changed legend font color to white
+          }
+        },
+        dataLabels: {
+          style: {
+            colors: ['#ffffff'] // Changed data labels color to white
+          }
         }
       },
     };
   }
-
 
   render() {
     return (

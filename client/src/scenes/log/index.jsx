@@ -104,7 +104,7 @@ const Transactions = () => {
     <Box m="1.5rem 2.5rem">
       <Box display="flex" alignItems="center">
         {/* Heading */}
-        <Typography style={{ fontSize: "30px", color: "#ffb1ff", fontWeight: "bold" }} variant="h4" gutterBottom>
+        <Typography style={{ fontSize: "30px", color: "#00E5FF", fontWeight: "bold" }} variant="h4" gutterBottom>
           IP LOG DATA
         </Typography>
         <img src={iconImage} alt="IP Log Icon" style={{ width: '100px', marginLeft: '10px', paddingLeft: '15px' }} />

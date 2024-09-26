@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {  Box } from "@mui/material";
 import Header from "components/Header";
 import OverviewChart from "components/OverviewChart";
+import Daily from "components/notification";
 
 const Overview = () => {
   const [view, setView] = useState("Real-time");
@@ -16,6 +17,8 @@ const Overview = () => {
         
       
         <OverviewChart view={view} setView={setView}  />
+        <Daily />
+
         
       </Box>
     </Box>
