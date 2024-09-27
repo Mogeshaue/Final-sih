@@ -6,7 +6,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Dashboard from "scenes/dashboard";
-
+import Footer from "components/footer";
 import Customers from "scenes/waf-controls";
 import Transactions from "scenes/log";
 import Geography from "scenes/geography";
@@ -15,7 +15,7 @@ import Daily from "scenes/daily";
 import Monthly from "scenes/monthly";
 import Breakdown from "scenes/report";
 import Admin from "scenes/admin";
-import Performance from "scenes/performance";
+import Performance from "scenes/Load-balancing";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -43,6 +43,8 @@ function App() {
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
+    
+
     </div>
   );
 }

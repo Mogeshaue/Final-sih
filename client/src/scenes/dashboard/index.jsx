@@ -5,6 +5,7 @@ import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import Footer from "../../components/footer"
 
 import StatBox from "components/StatBox";
 import BlockedRequestsChart from "components/BlockedRequestsChart";
@@ -300,10 +301,18 @@ const Dashboard = () => {
               />
             </Box>
           </Box>
+          
+         
         </Box>
-
-      </Box>
+       
+      </Box>  
+      <Footer  />
     </Box>
+
+    
+         
+   
+  
   );
 };
 

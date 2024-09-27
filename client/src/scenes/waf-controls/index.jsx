@@ -10,6 +10,7 @@ import Whitelist from "../../components/Whitelist.jsx";
 import Blocklist from "../../components/blockList.jsx";
 import LimitingControls from "../../components/Rate-Limiting.jsx";
 import Dahboard1 from "../../components/line.jsx"
+import Footer from "components/footer.jsx";
 
 const WAFControlPage = ({ mode = "dark" }) => {
   const muiTheme = createTheme(themeSettings(mode));  // Create theme based on the mode (dark or light)
@@ -116,6 +117,7 @@ const WAFControlPage = ({ mode = "dark" }) => {
             </Typography>
           )}
         </Box>
+      <Footer />
       </Box>
     </ThemeProvider>
   );

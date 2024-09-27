@@ -208,6 +208,9 @@ const Sidebar = ({
                   {user.occupation}
                 </Typography>
               </Box>
+              <Box>
+                
+              </Box>
             
             </FlexBetween>
           </Box>

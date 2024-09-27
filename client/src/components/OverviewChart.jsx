@@ -3,7 +3,7 @@ import { Box, FormControl, MenuItem, InputLabel, Select, Typography, TextField, 
 import ReactApexChart from "react-apexcharts";
 import dayjs from "dayjs";
 import WAFSpikeDetectionGraph from "./spike-detection";
-
+import Footer from "./footer";
 // Helper function to generate random data
 const generateRealTimeData = (size, interval, unit) => {
   const data = [];
@@ -205,10 +205,12 @@ const OverviewChart = () => {
         )}
         {graphType === "spike" && (
           <WAFSpikeDetectionGraph timeView={timeView} />
+
         )}
       </Box>
-
+     
     </Box>
+    
   );
 };
 

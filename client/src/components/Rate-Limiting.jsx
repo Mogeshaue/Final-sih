@@ -55,7 +55,7 @@ const LimitingControls = () => {
 
             {/* Client IP */}
             <TextField
-              label="Client IP"
+              label="Server IP"
               value={clientIp}
               onChange={(e) => setClientIp(e.target.value)}
               fullWidth

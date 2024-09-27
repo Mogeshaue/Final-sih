@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
+import Daily from "../components/notification"
 
 const WAFSpikeDetectionGraph = ({ timeView }) => {
   const [trafficData, setTrafficData] = useState([]);
@@ -110,6 +111,7 @@ const WAFSpikeDetectionGraph = ({ timeView }) => {
   return (
     <div>
       <ApexCharts options={chartOptions} series={chartSeries} type="line" height={350} />
+      <Daily />
     </div>
   );
 };

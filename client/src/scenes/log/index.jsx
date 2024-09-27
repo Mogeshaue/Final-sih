@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Footer from "components/footer";
 import {
   Box,
   IconButton,
@@ -216,7 +217,9 @@ const Transactions = () => {
           </Table>
         </TableContainer>
       )}
+      <Footer />
     </Box>
+
   );
 };
 

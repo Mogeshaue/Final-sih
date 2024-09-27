@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Paper, Typography, TextField, Select, MenuItem, Slider } from '@mui/material';
 import Chart from 'react-apexcharts';  // ApexCharts React wrapper
-
+import Footer from 'components/footer';
 const LoadBalancingRateLimiter = () => {
   const time_url = '';  // Add your API endpoint here
   const [ruleName, setRuleName] = useState('');
@@ -223,6 +223,7 @@ const LoadBalancingRateLimiter = () => {
         </Grid>
 
       </Grid>
+      <Footer />
     </Box>
   );
 };
